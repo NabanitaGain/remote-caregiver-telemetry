@@ -1,0 +1,24 @@
+{
+  "name": "remote-caregiver-telemetry-v3",
+  "private": true,
+  "version": "3.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@tailwindcss/vite": "^4.1.12",
+    "@vitejs/plugin-react": "^4.6.0",
+    "daisyui": "^5.0.50",
+    "lucide-react": "^0.468.0",
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1",
+    "react-router-dom": "^7.8.2",
+    "react-toastify": "^11.1.0",
+    "recharts": "^3.1.2",
+    "tailwindcss": "^4.1.12",
+    "vite": "^7.1.3"
+  }
+}
