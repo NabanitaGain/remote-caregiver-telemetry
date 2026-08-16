@@ -10,7 +10,8 @@ import {
   HeartPulse,
   ChevronLeft,
   ChevronRight,
-  LogOut
+  LogOut,
+  X,
 } from "lucide-react";
 
 import { useAuth } from "../context/AuthContext";
@@ -20,213 +21,381 @@ const links = [
   {
     to: "/",
     label: "Overview",
-    icon: LayoutDashboard
+    icon: LayoutDashboard,
   },
   {
     to: "/patients",
     label: "Patients",
-    icon: Users
+    icon: Users,
   },
   {
     to: "/telemetry",
     label: "Live Telemetry",
-    icon: Activity
+    icon: Activity,
   },
   {
     to: "/alerts",
     label: "Alerts",
-    icon: BellRing
+    icon: BellRing,
   },
   {
     to: "/analytics",
     label: "Analytics",
-    icon: BarChart3
+    icon: BarChart3,
   },
   {
     to: "/settings",
     label: "Settings",
-    icon: Settings
-  }
+    icon: Settings,
+  },
 ];
 
 
 export default function Sidebar({
   collapsed,
-  setCollapsed
+  setCollapsed,
+  mobileOpen = false,
+  setMobileOpen = () => {},
 }) {
 
   const { logout } = useAuth();
 
 
+  /*
+  ============================================================
+  LOGOUT
+  ============================================================
+  */
+
+  const handleLogout = () => {
+    setMobileOpen(false);
+    logout();
+  };
+
+
+  /*
+  ============================================================
+  NAVIGATION CLICK
+  Close sidebar automatically on mobile
+  ============================================================
+  */
+
+  const handleNavigation = () => {
+    setMobileOpen(false);
+  };
+
+
   return (
+    <>
+      {/* ======================================================
+          MOBILE OVERLAY
+      ====================================================== */}
 
-    <aside
-      className={`
-        hidden
-        lg:flex
-        fixed
-        left-0
-        top-0
-        bottom-0
-        z-40
-        flex-col
-        border-r
-        border-base-300
-        bg-base-100
-        transition-all
-        ${collapsed ? "w-20" : "w-64"}
-      `}
-    >
+      {mobileOpen && (
+        <div
+          onClick={() => setMobileOpen(false)}
+          className="
+            fixed
+            inset-0
+            z-40
+            bg-black/40
+            backdrop-blur-[2px]
+            lg:hidden
+          "
+        />
+      )}
 
 
-      {/* =====================================================
-          LOGO
-      ===================================================== */}
+      {/* ======================================================
+          SIDEBAR
+      ====================================================== */}
 
-      <div className="flex h-20 items-center gap-3 border-b border-base-300 px-5">
+      <aside
+        className={`
+          fixed
+          left-0
+          top-0
+          bottom-0
+          z-50
+          flex
+          flex-col
+          border-r
+          border-base-300
+          bg-base-100
+          shadow-xl
+          transition-all
+          duration-300
+          ease-in-out
 
-        <div className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-primary text-primary-content">
+          /* =========================
+             MOBILE
+          ========================= */
 
-          <HeartPulse size={23} />
+          w-[280px]
+
+          ${
+            mobileOpen
+              ? "translate-x-0"
+              : "-translate-x-full"
+          }
+
+          /* =========================
+             DESKTOP
+          ========================= */
+
+          lg:translate-x-0
+          lg:shadow-none
+
+          ${
+            collapsed
+              ? "lg:w-20"
+              : "lg:w-64"
+          }
+        `}
+      >
+
+        {/* ====================================================
+            LOGO / HEADER
+        ==================================================== */}
+
+        <div
+          className={`
+            flex
+            h-20
+            shrink-0
+            items-center
+            border-b
+            border-base-300
+            px-5
+
+            ${
+              collapsed
+                ? "lg:justify-center lg:px-3"
+                : "gap-3"
+            }
+          `}
+        >
+
+          {/* Logo */}
+
+          <div
+            className="
+              grid
+              h-10
+              w-10
+              shrink-0
+              place-items-center
+              rounded-xl
+              bg-primary
+              text-primary-content
+              shadow-sm
+            "
+          >
+            <HeartPulse size={23} />
+          </div>
+
+
+          {/* Brand */}
+
+          {!collapsed && (
+            <div className="min-w-0">
+
+              <div className="truncate text-lg font-bold">
+                CarePulse
+              </div>
+
+              <div className="truncate text-xs opacity-60">
+                Remote Care
+              </div>
+
+            </div>
+          )}
+
+
+          {/* ==================================================
+              MOBILE CLOSE BUTTON
+          ================================================== */}
+
+          <button
+            onClick={() => setMobileOpen(false)}
+            className="
+              btn
+              btn-ghost
+              btn-sm
+              btn-circle
+              ml-auto
+              lg:hidden
+            "
+            aria-label="Close sidebar"
+          >
+            <X size={20} />
+          </button>
 
         </div>
 
 
-        {!collapsed && (
+        {/* ====================================================
+            NAVIGATION
+        ==================================================== */}
 
-          <div>
-
-            <div className="text-lg font-bold">
-              CarePulse
-            </div>
-
-            <div className="text-xs opacity-60">
-              Remote Care
-            </div>
-
-          </div>
-
-        )}
-
-      </div>
-
-
-      {/* =====================================================
-          NAVIGATION
-      ===================================================== */}
-
-      <nav className="flex-1 space-y-1 p-3">
-
-        {links.map(
-          ({ to, label, icon: Icon }) => (
-
-            <NavLink
-              key={to}
-              to={to}
-              end={to === "/"}
-              className={({ isActive }) =>
-                `
-                flex
-                items-center
-                gap-3
-                rounded-xl
-                px-3
-                py-3
-                text-sm
-                font-medium
-                transition
-
-                ${
-                  isActive
-                    ? "bg-primary text-primary-content shadow-sm"
-                    : "hover:bg-base-200"
-                }
-
-                ${collapsed ? "justify-center" : ""}
-                `
-              }
-            >
-
-              <Icon size={19} />
-
-              {!collapsed && (
-                <span>
-                  {label}
-                </span>
-              )}
-
-            </NavLink>
-
-          )
-        )}
-
-      </nav>
-
-
-      {/* =====================================================
-          LOGOUT BUTTON
-      ===================================================== */}
-
-      <div className="px-3 pb-2">
-
-        <button
-          onClick={logout}
-          className={`
-            flex
-            w-full
-            items-center
-            gap-3
-            rounded-xl
-            px-3
-            py-3
-            text-sm
-            font-medium
-            text-error
-            transition
-            hover:bg-error/10
-
-            ${collapsed ? "justify-center" : ""}
-          `}
+        <nav
+          className="
+            flex-1
+            space-y-1
+            overflow-y-auto
+            p-3
+          "
         >
 
-          <LogOut size={19} />
+          {links.map(
+            ({ to, label, icon: Icon }) => (
 
-          {!collapsed && (
-            <span>
-              Logout
-            </span>
+              <NavLink
+                key={to}
+                to={to}
+                end={to === "/"}
+                onClick={handleNavigation}
+                title={collapsed ? label : undefined}
+                className={({ isActive }) =>
+                  `
+                    group
+                    flex
+                    min-h-11
+                    items-center
+                    gap-3
+                    rounded-xl
+                    px-3
+                    py-3
+                    text-sm
+                    font-medium
+                    transition-all
+                    duration-200
+
+                    ${
+                      isActive
+                        ? "bg-primary text-primary-content shadow-sm"
+                        : "hover:bg-base-200"
+                    }
+
+                    ${
+                      collapsed
+                        ? "lg:justify-center"
+                        : ""
+                    }
+                  `
+                }
+              >
+
+                <Icon
+                  size={19}
+                  className="shrink-0"
+                />
+
+                {!collapsed && (
+                  <span className="truncate">
+                    {label}
+                  </span>
+                )}
+
+              </NavLink>
+
+            )
           )}
 
-        </button>
-
-      </div>
+        </nav>
 
 
-      {/* =====================================================
-          COLLAPSE BUTTON
-      ===================================================== */}
+        {/* ====================================================
+            BOTTOM AREA
+        ==================================================== */}
 
-      <button
-        onClick={() => setCollapsed(!collapsed)}
-        className="m-3 btn btn-ghost btn-sm"
-      >
+        <div className="shrink-0 border-t border-base-300 p-3">
 
-        {collapsed ? (
 
-          <ChevronRight size={18} />
+          {/* ==================================================
+              LOGOUT
+          ================================================== */}
 
-        ) : (
+          <button
+            onClick={handleLogout}
+            title={collapsed ? "Logout" : undefined}
+            className={`
+              flex
+              min-h-11
+              w-full
+              items-center
+              gap-3
+              rounded-xl
+              px-3
+              py-3
+              text-sm
+              font-medium
+              text-error
+              transition
+              hover:bg-error/10
 
-          <>
-            <ChevronLeft size={18} />
-            Collapse
-          </>
+              ${
+                collapsed
+                  ? "lg:justify-center"
+                  : ""
+              }
+            `}
+          >
 
-        )}
+            <LogOut
+              size={19}
+              className="shrink-0"
+            />
 
-      </button>
+            {!collapsed && (
+              <span>
+                Logout
+              </span>
+            )}
 
-    </aside>
+          </button>
 
+
+          {/* ==================================================
+              DESKTOP COLLAPSE BUTTON
+          ================================================== */}
+
+          <button
+            onClick={() => setCollapsed(!collapsed)}
+            className="
+              btn
+              btn-ghost
+              btn-sm
+              mt-2
+              hidden
+              w-full
+              lg:flex
+            "
+            title={
+              collapsed
+                ? "Expand sidebar"
+                : "Collapse sidebar"
+            }
+          >
+
+            {collapsed ? (
+
+              <ChevronRight size={18} />
+
+            ) : (
+
+              <>
+                <ChevronLeft size={18} />
+                <span>Collapse</span>
+              </>
+
+            )}
+
+          </button>
+
+        </div>
+
+      </aside>
+    </>
   );
 }

@@ -1,9 +1,11 @@
 import { useMemo, useState } from "react";
 import { Search, UserPlus, SlidersHorizontal } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import { patients } from "../data/mockData";
 import PatientTable from "../components/PatientTable";
 
 export default function Patients() {
+  const navigate = useNavigate();
   const [query, setQuery] = useState("");
   const [status, setStatus] = useState("All");
 
@@ -14,7 +16,14 @@ export default function Patients() {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col justify-between gap-3 md:flex-row md:items-center"><div><h1 className="text-3xl font-bold">Patients</h1><p className="opacity-60">Manage and monitor your remote patient population.</p></div><button className="btn btn-primary"><UserPlus size={17}/> Add patient</button></div>
+      <div className="flex flex-col justify-between gap-3 md:flex-row md:items-center"><div><h1 className="text-3xl font-bold">Patients</h1><p className="opacity-60">Manage and monitor your remote patient population.</p></div><button
+            onClick={() => navigate("/patients/add")}
+            className="btn btn-primary"
+          >
+            <UserPlus size={17} />
+            Add patient
+          </button>
+          </div>
       <div className="card border border-base-300 bg-base-100 shadow-sm"><div className="card-body p-4">
         <div className="flex flex-col gap-3 md:flex-row">
           <label className="input input-bordered flex-1"><Search size={17}/><input value={query} onChange={e => setQuery(e.target.value)} placeholder="Search by name or patient ID..." /></label>

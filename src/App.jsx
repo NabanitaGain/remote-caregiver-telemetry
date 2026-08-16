@@ -14,6 +14,7 @@ import Settings from "./pages/Settings";
 
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import AddPatient from "./pages/AddPatient";
 
 import ProtectedRoute from "./components/ProtectedRoute";
 
@@ -91,6 +92,27 @@ export default function App({ dark, setDark }) {
                   setMobileOpen={setMobileOpen}
                 >
                   <Patients />
+                </MainLayout>
+              }
+            />
+
+
+            {/* =================================================
+                ADD NEW PATIENT
+            ================================================= */}
+
+            <Route
+              path="/patients/add"
+              element={
+                <MainLayout
+                  dark={dark}
+                  setDark={setDark}
+                  collapsed={collapsed}
+                  setCollapsed={setCollapsed}
+                  mobileOpen={mobileOpen}
+                  setMobileOpen={setMobileOpen}
+                >
+                  <AddPatient />
                 </MainLayout>
               }
             />
@@ -257,9 +279,11 @@ function MainLayout({
       ===================================================== */}
 
       <Sidebar
-        collapsed={collapsed}
-        setCollapsed={setCollapsed}
-      />
+      collapsed={collapsed}
+      setCollapsed={setCollapsed}
+      mobileOpen={mobileOpen}
+      setMobileOpen={setMobileOpen}
+    />
 
 
       {/* =====================================================
